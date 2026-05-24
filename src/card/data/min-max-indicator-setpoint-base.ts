@@ -1,9 +1,9 @@
 import { NumberUtils } from "../../utils/number/numberUtils";
 import { getValueFromPath } from "../../utils/object/get-value";
-import { getMinMaxIndicatorSetpointContext } from "../types/contexts";
+import { ComputeDataContext } from "../types/contexts";
 
 export function getMinMaxIndicatorSetpointBase(
-  card: getMinMaxIndicatorSetpointContext,
+  card: ComputeDataContext,
   bar: number,
   element: "min_indicator" | "max_indicator" | "setpoint"
 ):

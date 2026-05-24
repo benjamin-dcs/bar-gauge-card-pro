@@ -57,6 +57,8 @@ export type BarGaugeEntity = {
   gradient_background_opacity?: number;
   gradient_resolution?: GradientResolution;
 
+  icon?: IconConfig;
+
   min_indicator?: MinMaxIndicatorConfig;
   max_indicator?: MinMaxIndicatorConfig;
   setpoint?: SetpointConfig;

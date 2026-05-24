@@ -32,4 +32,8 @@ export interface ComputeDataContext {
 
   getValueBound: GetValueFn;
   getValue<T = unknown>(key: string): T | undefined;
+
+  getLightDarkModeColor(key: string): string | undefined;
+
+  getValidatedSvgPath(key: string): string | undefined;
 }

@@ -16,7 +16,7 @@ const serveOptions = {
 export default defineConfig({
   input: "src/card/card.ts",
   output: {
-    file: "dist/horizontal-gauge-card-pro.js",
+    file: "dist/bar-gauge-card-pro.js",
     format: "es",
     codeSplitting: false,
     minify: !dev,

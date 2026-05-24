@@ -18,9 +18,7 @@ import {
 // Local constants & types
 import { DEFAULTS } from "../../constants/defaults";
 import type { BarGaugeEntity } from "../config";
-import type {
-  ComputeDataContext
-} from "../types/contexts";
+import type { ComputeDataContext } from "../types/contexts";
 import type {
   EntityRenderData,
   IconData,
@@ -187,10 +185,7 @@ export function computeData(card: ComputeDataContext) {
       }
 
       let setpointData: SetpointData | undefined = undefined;
-      const _setpoint = getSetpoint(
-        card,
-        index
-      );
+      const _setpoint = getSetpoint(card, index);
       if (_setpoint) {
         const setpointValue = _setpoint.value;
         const setpointPercentage = getValueInPercentage(
