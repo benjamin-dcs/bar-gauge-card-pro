@@ -1,0 +1,12 @@
+export { version as VERSION } from "../../package.json";
+
+export const LOGGER_SETTINGS = {
+  /**
+   * Current log level
+   * 0 = ERROR, 1 = WARN, 2 = INFO, 3 = DEBUG
+   */
+  DEFAULT_LOG_LEVEL: 1,
+
+  /** Standard prefix for log messages */
+  PREFIX: "🏳️‍🌈 Bar Gauge Card Pro",
+};
