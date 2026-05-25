@@ -2,6 +2,13 @@
 
 ### Build beautiful Bar Gauge cards using 🌈 gradients and 🛠️ templates!
 
+## Todo
+
+- Add Min/Max indicators
+- Add Visual Editor
+- Add custom shapes
+- Add custom styling variables
+
 ## Description
 
 Build as a more space-efficient alternative for
