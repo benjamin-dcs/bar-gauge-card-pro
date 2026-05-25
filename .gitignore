@@ -12,6 +12,7 @@ dist
 !.hass_dev/www
 !.hass_dev/packages
 .hass_dev/www/community/*
+.vscode
 
 # Mac OS
 .DS_Store
