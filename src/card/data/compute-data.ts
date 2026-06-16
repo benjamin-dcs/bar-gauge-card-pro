@@ -8,7 +8,7 @@ import {
   getSecondaryValueAndValueText,
   getValueAndValueText,
 } from "./get-value-and-valueText";
-import { getSetpoint } from "./setpoint";
+import { getSetpoint } from "./get-setpoint";
 import {
   computeSeverity,
   getFlatLinearGradientString,
@@ -22,10 +22,12 @@ import type { ComputeDataContext } from "../types/contexts";
 import type {
   EntityRenderData,
   IconData,
+  MinMaxIndicatorData,
   SecondaryValueData,
   SetpointData,
   SeverityData,
 } from "../types/types";
+import { getMinMaxIndicator } from "./get-min-max-indicator";
 
 export function computeData(card: ComputeDataContext) {
   if (!card._config.entities) return;
@@ -184,6 +186,36 @@ export function computeData(card: ComputeDataContext) {
         };
       }
 
+      let minIndicatorData: MinMaxIndicatorData | undefined = undefined;
+      const _minIndicator = getMinMaxIndicator(card, index, "min_indicator");
+      if (_minIndicator) {
+        const minIndicatorValue = _minIndicator.value;
+        const minIndicatorPercentage = getValueInPercentage(
+          normalize(minIndicatorValue ?? min, min, max),
+          min,
+          max
+        );
+        minIndicatorData = {
+          percentage: minIndicatorPercentage,
+          ..._minIndicator,
+        };
+      }
+
+      let maxIndicatorData: MinMaxIndicatorData | undefined = undefined;
+      const _maxIndicator = getMinMaxIndicator(card, index, "max_indicator");
+      if (_maxIndicator) {
+        const maxIndicatorValue = _maxIndicator.value;
+        const maxIndicatorPercentage = getValueInPercentage(
+          normalize(maxIndicatorValue ?? max, min, max),
+          min,
+          max
+        );
+        maxIndicatorData = {
+          percentage: maxIndicatorPercentage,
+          ..._maxIndicator,
+        };
+      }
+
       let setpointData: SetpointData | undefined = undefined;
       const _setpoint = getSetpoint(card, index);
       if (_setpoint) {
@@ -218,6 +250,8 @@ export function computeData(card: ComputeDataContext) {
         percentage,
         linearGradient,
         severity,
+        minIndicator: minIndicatorData,
+        maxIndicator: maxIndicatorData,
         setpoint: setpointData,
         secondary: dataSecondary,
       };

@@ -70,6 +70,8 @@ export class HorizontalGaugeRow extends LitElement {
                 data.secondary
               )
             : this.renderValueIndicator(data.secondary)}
+          ${data.minIndicator ? this.renderMinIndicator() : nothing}
+          ${data.maxIndicator ? this.renderMaxIndicator() : nothing} }
           ${data.setpoint ? this.renderSetpointIndicator() : nothing}
         </div>
       </div>
@@ -129,6 +131,14 @@ export class HorizontalGaugeRow extends LitElement {
 
     if (severityColorMode !== "gradient") {
       return html`
+        ${this.data.severity.offsetPercentage === 50
+          ? html`<div
+              style=${styleMap({
+                height: secondary ? "45%" : "100%",
+                width: "50%",
+              })}
+            ></div>`
+          : nothing}
         <div
           class="severity-value"
           style=${styleMap({
@@ -167,6 +177,14 @@ export class HorizontalGaugeRow extends LitElement {
     const percentageSecondary = secondary?.percentage;
 
     return html`
+      ${offset === 50
+        ? html`<div
+            style=${styleMap({
+              height: secondary ? "45%" : "100%",
+              width: "50%",
+            })}
+          ></div>`
+        : nothing}
       <div
         class="severity-value"
         style=${styleMap({
@@ -248,6 +266,28 @@ export class HorizontalGaugeRow extends LitElement {
     </div>`;
   }
 
+  private renderMinIndicator() {
+    return html`<div
+      class="min-indicator"
+      style=${styleMap({
+        width: `${this.data.minIndicator!.percentage ?? 0}%`,
+        background: this.data.minIndicator!.color,
+        opacity: this.data.minIndicator!.opacity,
+      })}
+    ></div>`;
+  }
+
+  private renderMaxIndicator() {
+    return html`<div
+      class="max-indicator"
+      style=${styleMap({
+        left: `${this.data.maxIndicator!.percentage ?? 0}%`,
+        background: this.data.maxIndicator!.color,
+        opacity: this.data.maxIndicator!.opacity,
+      })}
+    ></div>`;
+  }
+
   private renderSetpointIndicator() {
     return html` <div class="value-indicator">
       <svg
@@ -255,14 +295,14 @@ export class HorizontalGaugeRow extends LitElement {
         xmlns="http://www.w3.org/2000/svg"
         class="value-indicator-svg"
         style=${styleMap({
-          left: `${this.data.setpoint?.percentage ?? 0}%`,
+          left: `${this.data.setpoint!.percentage ?? 0}%`,
         })}
       >
         <path
           d="${DEFAULTS.svg.setpoint}"
-          style="
-            fill: #ff0000;
-          "
+          style=${styleMap({
+            fill: this.data.setpoint!.color,
+          })}
         ></path>
       </svg>
     </div>`;

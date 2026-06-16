@@ -56,6 +56,9 @@ export type EntityRenderData = {
 
   severity?: SeverityData;
 
+  minIndicator?: MinMaxIndicatorData;
+  maxIndicator?: MinMaxIndicatorData;
+
   setpoint?: SetpointData;
 
   icon?: IconData;
@@ -88,8 +91,15 @@ export type SeverityData = {
   color: string | undefined;
 };
 
+export type MinMaxIndicatorData = {
+  percentage: number;
+  color: string;
+  opacity: number;
+};
+
 export type SetpointData = {
   percentage: number;
+  color: string;
   label: string | undefined;
 };
 
