@@ -9,6 +9,8 @@ import type {
   ComputedEntityConfig,
   EntityRenderData,
   SeverityColorMode,
+  MinMaxIndicatorData,
+  SetpointData,
 } from "../../types/types";
 import { HomeAssistant } from "../../../dependencies/ha";
 import { horizontalRowStyles } from "../../css/horizontal-row";
@@ -70,9 +72,9 @@ export class HorizontalGaugeRow extends LitElement {
                 data.secondary
               )
             : this.renderValueIndicator(data.secondary)}
-          ${data.minIndicator ? this.renderMinIndicator() : nothing}
-          ${data.maxIndicator ? this.renderMaxIndicator() : nothing} }
-          ${data.setpoint ? this.renderSetpointIndicator() : nothing}
+          ${data.minIndicator ? this.renderMinIndicator(data.minIndicator) : nothing}
+          ${data.maxIndicator ? this.renderMaxIndicator(data.maxIndicator) : nothing}
+          ${data.setpoint ? this.renderSetpointIndicator(data.setpoint) : nothing}
         </div>
       </div>
     </div>`;
@@ -266,42 +268,42 @@ export class HorizontalGaugeRow extends LitElement {
     </div>`;
   }
 
-  private renderMinIndicator() {
+  private renderMinIndicator(data: MinMaxIndicatorData) {
     return html`<div
       class="min-indicator"
       style=${styleMap({
-        width: `${this.data.minIndicator!.percentage ?? 0}%`,
-        background: this.data.minIndicator!.color,
+        width: `${data.percentage ?? 0}%`,
+        background: data.color,
         opacity: this.data.minIndicator!.opacity,
       })}
     ></div>`;
   }
 
-  private renderMaxIndicator() {
+  private renderMaxIndicator(data: MinMaxIndicatorData) {
     return html`<div
       class="max-indicator"
       style=${styleMap({
-        left: `${this.data.maxIndicator!.percentage ?? 0}%`,
-        background: this.data.maxIndicator!.color,
-        opacity: this.data.maxIndicator!.opacity,
+        left: `${data.percentage ?? 0}%`,
+        background: data.color,
+        opacity: data.opacity,
       })}
     ></div>`;
   }
 
-  private renderSetpointIndicator() {
+  private renderSetpointIndicator(data: SetpointData) {
     return html` <div class="value-indicator">
       <svg
         viewBox="-1 -1 2 2"
         xmlns="http://www.w3.org/2000/svg"
         class="value-indicator-svg"
         style=${styleMap({
-          left: `${this.data.setpoint!.percentage ?? 0}%`,
+          left: `${data.percentage ?? 0}%`,
         })}
       >
         <path
           d="${DEFAULTS.svg.setpoint}"
           style=${styleMap({
-            fill: this.data.setpoint!.color,
+            fill: data.color,
           })}
         ></path>
       </svg>
