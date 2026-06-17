@@ -52,6 +52,20 @@ export const horizontalRowStyles = css`
     white-space: nowrap;
   }
 
+  .compact-title {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: var(--ha-font-size-s);
+    white-space: nowrap;
+  }
+
+  .compact-value {
+    font-size: var(--ha-font-size-s);
+    white-space: nowrap;
+    text-align: right;
+  }
+
   .value-bar {
     position: relative;
     width: 100%;

@@ -11,7 +11,8 @@ export function processConfigUpdate(
   card.hideAllTextBars = config.hide_all_text_bars ?? false;
   card.hideBackground = config.hide_background ?? false;
   card.orientation = config.orientation ?? DEFAULTS.ui.orientation;
-  card.compact = config.orientation == "horizontal" ? config.compact ?? false : undefined;
+  card.compact =
+    card.orientation == "horizontal" ? (config.compact ?? false) : undefined;
 
   if (config.entities) {
     config.entities.forEach((entityConfig, index: number) => {

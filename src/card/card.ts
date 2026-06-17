@@ -73,6 +73,8 @@ export class BarGaugeCardProCard extends LitElement implements LovelaceCard {
   hideAllTextBars = false;
   hideBackground = false;
 
+  compact = false;
+
   orientation: CardOrientation = "horizontal";
 
   computedConfig: ComputedEntityConfig[] = [];
@@ -188,9 +190,10 @@ export class BarGaugeCardProCard extends LitElement implements LovelaceCard {
         ${this.renderHeader()}
         ${this.orientation === "horizontal"
           ? html`<bar-gauge-horizontal
+              .hass=${this.hass}
+              .compact=${this.compact}
               .config=${this.computedConfig}
               .data=${this.renderData}
-              .hass=${this.hass}
               class="card-content"
             >
             </bar-gauge-horizontal>`
