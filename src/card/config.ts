@@ -76,6 +76,7 @@ export type BarGaugeCardProCardConfig = LovelaceCardConfig & {
   entities?: BarGaugeEntity[];
 
   orientation?: CardOrientation;
+  compact?: boolean;
 
   hide_background?: boolean;
   hide_all_text_bars?: boolean;

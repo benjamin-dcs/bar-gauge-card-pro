@@ -9,6 +9,8 @@ import type {
   ComputedEntityConfig,
   EntityRenderData,
   SeverityColorMode,
+  MinMaxIndicatorData,
+  SetpointData,
 } from "../../types/types";
 import { HomeAssistant } from "../../../dependencies/ha";
 import { horizontalRowStyles } from "../../css/horizontal-row";
@@ -70,7 +72,9 @@ export class HorizontalGaugeRow extends LitElement {
                 data.secondary
               )
             : this.renderValueIndicator(data.secondary)}
-          ${data.setpoint ? this.renderSetpointIndicator() : nothing}
+          ${data.minIndicator ? this.renderMinIndicator(data.minIndicator) : nothing}
+          ${data.maxIndicator ? this.renderMaxIndicator(data.maxIndicator) : nothing}
+          ${data.setpoint ? this.renderSetpointIndicator(data.setpoint) : nothing}
         </div>
       </div>
     </div>`;
@@ -129,6 +133,14 @@ export class HorizontalGaugeRow extends LitElement {
 
     if (severityColorMode !== "gradient") {
       return html`
+        ${this.data.severity.offsetPercentage === 50
+          ? html`<div
+              style=${styleMap({
+                height: secondary ? "45%" : "100%",
+                width: "50%",
+              })}
+            ></div>`
+          : nothing}
         <div
           class="severity-value"
           style=${styleMap({
@@ -167,6 +179,14 @@ export class HorizontalGaugeRow extends LitElement {
     const percentageSecondary = secondary?.percentage;
 
     return html`
+      ${offset === 50
+        ? html`<div
+            style=${styleMap({
+              height: secondary ? "45%" : "100%",
+              width: "50%",
+            })}
+          ></div>`
+        : nothing}
       <div
         class="severity-value"
         style=${styleMap({
@@ -248,21 +268,43 @@ export class HorizontalGaugeRow extends LitElement {
     </div>`;
   }
 
-  private renderSetpointIndicator() {
+  private renderMinIndicator(data: MinMaxIndicatorData) {
+    return html`<div
+      class="min-indicator"
+      style=${styleMap({
+        width: `${data.percentage ?? 0}%`,
+        background: data.color,
+        opacity: this.data.minIndicator!.opacity,
+      })}
+    ></div>`;
+  }
+
+  private renderMaxIndicator(data: MinMaxIndicatorData) {
+    return html`<div
+      class="max-indicator"
+      style=${styleMap({
+        left: `${data.percentage ?? 0}%`,
+        background: data.color,
+        opacity: data.opacity,
+      })}
+    ></div>`;
+  }
+
+  private renderSetpointIndicator(data: SetpointData) {
     return html` <div class="value-indicator">
       <svg
         viewBox="-1 -1 2 2"
         xmlns="http://www.w3.org/2000/svg"
         class="value-indicator-svg"
         style=${styleMap({
-          left: `${this.data.setpoint?.percentage ?? 0}%`,
+          left: `${data.percentage ?? 0}%`,
         })}
       >
         <path
           d="${DEFAULTS.svg.setpoint}"
-          style="
-            fill: #ff0000;
-          "
+          style=${styleMap({
+            fill: data.color,
+          })}
         ></path>
       </svg>
     </div>`;

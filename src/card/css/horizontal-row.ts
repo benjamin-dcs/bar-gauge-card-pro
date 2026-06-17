@@ -87,6 +87,20 @@ export const horizontalRowStyles = css`
     height: 45%;
   }
 
+  .min-indicator {
+    display: block;
+    position: absolute;
+    inset: 0;
+    height: 100%;
+  }
+
+  .max-indicator {
+    display: block;
+    position: absolute;
+    inset: 0;
+    height: 100%;
+  }
+
   .value-indicator {
     display: block;
     position: absolute;

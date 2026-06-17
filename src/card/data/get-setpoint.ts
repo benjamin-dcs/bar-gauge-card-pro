@@ -1,3 +1,4 @@
+import { DEFAULTS } from "../../constants/defaults";
 import { formatNumberToLocal } from "../../utils/number/format-to-locale";
 import { getValueFromPath } from "../../utils/object/get-value";
 import { ComputeDataContext } from "../types/contexts";
@@ -26,7 +27,7 @@ export function getSetpoint(card: ComputeDataContext, bar: number) {
 
   return {
     value: base.value,
-    customColor: base.customColor,
+    color: base.customColor ?? DEFAULTS.ui.setpointNeedleColor,
     label: label,
   };
 }

@@ -17,6 +17,7 @@ export interface ProcessConfigUpdateContext {
   hideBackground: boolean;
 
   orientation: CardOrientation;
+  compact?: boolean;
 
   computedConfig: ComputedEntityConfig[];
 }
