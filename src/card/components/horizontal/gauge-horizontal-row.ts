@@ -87,6 +87,12 @@ export class HorizontalGaugeRow extends LitElement {
             })}
           ></div>`
         : nothing}
+      ${data.minIndicator
+        ? this.renderMinIndicator(data.minIndicator)
+        : nothing}
+      ${data.maxIndicator
+        ? this.renderMaxIndicator(data.maxIndicator)
+        : nothing}
       ${conf.isSeverity
         ? this.renderSeverityBar(
             borderRadiusFactor,
@@ -94,12 +100,6 @@ export class HorizontalGaugeRow extends LitElement {
             data.secondary
           )
         : this.renderValueIndicator(data.secondary)}
-      ${data.minIndicator
-        ? this.renderMinIndicator(data.minIndicator)
-        : nothing}
-      ${data.maxIndicator
-        ? this.renderMaxIndicator(data.maxIndicator)
-        : nothing}
       ${data.setpoint ? this.renderSetpointIndicator(data.setpoint) : nothing}
     </div>`;
   }
