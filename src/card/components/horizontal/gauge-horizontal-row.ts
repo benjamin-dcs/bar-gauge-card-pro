@@ -23,11 +23,38 @@ export class HorizontalGaugeRow extends LitElement {
 
   @property({ attribute: false }) public hass!: HomeAssistant;
 
+  @property({ attribute: false }) public compact: boolean = false;
+
   protected override render(): TemplateResult | typeof nothing {
     const conf = this.config;
     const data = this.data;
 
     if (!conf || !data) return nothing;
+
+    if (this.compact) {
+      return html`
+        <div class="compact-title">
+          ${data.icon ? renderIcon(this.hass, data.icon) : nothing}
+          ${data.title ?? nothing}
+        </div>
+        ${this.renderValueBar()}
+        <div class="compact-value">${data.valueAndValueText.valueText}</div>
+      `;
+    }
+
+    return html`<div class="entity-row">
+      ${data.icon ? renderIcon(this.hass, data.icon) : nothing}
+
+      <div class="gauge-content">
+        ${!conf.hideTextBar ? this.renderTextBar(data) : nothing}
+        ${this.renderValueBar()}
+      </div>
+    </div>`;
+  }
+
+  private renderValueBar() {
+    const conf = this.config;
+    const data = this.data;
 
     const borderRadiusFactor = ROUND_FACTORS[conf.round];
 
@@ -36,47 +63,44 @@ export class HorizontalGaugeRow extends LitElement {
       conf.mode === "gradient" ||
       conf.mode === "flat";
 
-    return html`<div class="entity-row">
-      ${data.icon ? renderIcon(this.hass, data.icon) : nothing}
-
-      <div class="gauge-content">
-        ${!conf.hideTextBar ? this.renderTextBar(data) : nothing}
-        <div
-          class="value-bar"
-          style=${styleMap({
-            "border-radius": borderRadiusFactor
-              ? `calc(var(--bar-height) / ${borderRadiusFactor})`
-              : undefined,
-          })}
-        >
-          ${conf.isSeverity
-            ? html`<div
-                class="severity-background"
-                style=${styleMap({
-                  background: conf.gradientBackground ? "#ffffff" : "#eeeeee",
-                })}
-              ></div>`
-            : nothing}
-          ${shouldRenderGradientBg
-            ? html`<div
-                class="gradient-background"
-                style=${styleMap({
-                  background: `linear-gradient(to right, ${this.data.linearGradient})`,
-                })}
-              ></div>`
-            : nothing}
-          ${conf.isSeverity
-            ? this.renderSeverityBar(
-                borderRadiusFactor,
-                conf.severityColorMode!,
-                data.secondary
-              )
-            : this.renderValueIndicator(data.secondary)}
-          ${data.minIndicator ? this.renderMinIndicator(data.minIndicator) : nothing}
-          ${data.maxIndicator ? this.renderMaxIndicator(data.maxIndicator) : nothing}
-          ${data.setpoint ? this.renderSetpointIndicator(data.setpoint) : nothing}
-        </div>
-      </div>
+    return html`<div
+      class="value-bar"
+      style=${styleMap({
+        "border-radius": borderRadiusFactor
+          ? `calc(var(--bar-height) / ${borderRadiusFactor})`
+          : undefined,
+      })}
+    >
+      ${conf.isSeverity
+        ? html`<div
+            class="severity-background"
+            style=${styleMap({
+              background: conf.gradientBackground ? "#ffffff" : "#eeeeee",
+            })}
+          ></div>`
+        : nothing}
+      ${shouldRenderGradientBg
+        ? html`<div
+            class="gradient-background"
+            style=${styleMap({
+              background: `linear-gradient(to right, ${this.data.linearGradient})`,
+            })}
+          ></div>`
+        : nothing}
+      ${conf.isSeverity
+        ? this.renderSeverityBar(
+            borderRadiusFactor,
+            conf.severityColorMode!,
+            data.secondary
+          )
+        : this.renderValueIndicator(data.secondary)}
+      ${data.minIndicator
+        ? this.renderMinIndicator(data.minIndicator)
+        : nothing}
+      ${data.maxIndicator
+        ? this.renderMaxIndicator(data.maxIndicator)
+        : nothing}
+      ${data.setpoint ? this.renderSetpointIndicator(data.setpoint) : nothing}
     </div>`;
   }
 
