@@ -150,6 +150,19 @@ segments: |-
 | `hold_action`       | [Home Assistant Hold action](https://www.home-assistant.io/dashboards/actions/#hold-action)             |          |                   |                                                                             |
 | `double_tap_action` | [Home Assistant Double tap action](https://www.home-assistant.io/dashboards/actions/#double-tap-action) |          |                   |                                                                             |
 
+### Min/Max Indicator Configuration variables
+
+| Name        | Type                                           | Default              | Description                                                                  | [Templatable](https://www.home-assistant.io/docs/configuration/templating/) |
+| :---------- | :--------------------------------------------- | :------------------- | :--------------------------------------------------------------------------- | :-------------------------------------------------------------------------- |
+| `type`      | string                                         | Required             | `attribute`, `entity`, `number` or `template`                                |                                                                             |
+| `value`     | value corresponding to the type                | Required             | Value of the needle                                                          |                                                                             |
+|             |                                                |                      | • `attribute`: attribute of `entity` (main-gauge) or `entity2` (inner-gauge) |                                                                             |
+|             |                                                |                      | • `entity`: Entity_id                                                        |                                                                             |
+|             |                                                |                      | • `number`: Fixed number                                                     |                                                                             |
+|             |                                                |                      | • `template`: Template that returns a number                                 | ✔️                                                                          |
+| `color`     | [string or map<sup>5</sup>](#1-color-examples) | `var(--error-color)` | Color of the needle                                                          | ✔️                                                                          |
+| `opacity`   | number                                         | 0.8                  | Opacity of the min or max indicator                                          |                                                                             |
+
 ### Setpoint Configuration variables
 
 | Name        | Type                                           | Default              | Description                                                                  | [Templatable](https://www.home-assistant.io/docs/configuration/templating/) |
