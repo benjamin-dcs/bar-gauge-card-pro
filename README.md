@@ -12,7 +12,7 @@
 ## Description
 
 Build as a more space-efficient alternative for
-[Gauge Card Pro](https://github.com/benjamin-dcs/gauge-card-pro) I created
+[Gauge Card Pro](https://github.com/benjamin-dcs/gauge-card-pro), I created
 `Bar Gauge Card Pro`.
 
 - 🌈 Native gradient support for `segments`
@@ -49,6 +49,7 @@ If you find **Bar Gauge Card Pro** useful, consider supporting its development:
 | `header`             | string  |              | Header of the card                                                      |                                                                             |
 | `entities`           | list    |              | List of individual [bar configuration](#entity-configuration-variables) |                                                                             |
 | `orientation`        | string  | `horizontal` | Orientation of the bars. Valid values are `horizontal` and `vertical`   |                                                                             |
+| `compact`            | boolean | `false`      | Show all data in-line with the bar. Only shows `title` and value        |                                                                             |
 | `hide_all_text_bars` | boolean | `false`      | Hides all text-bars                                                     |                                                                             |
 | `hide_background`    | boolean | `false`      | Hides the background and border of the card                             |                                                                             |
 
