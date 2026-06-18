@@ -29,5 +29,6 @@ export function getSetpoint(card: ComputeDataContext, bar: number) {
     value: base.value,
     color: base.customColor ?? DEFAULTS.ui.setpointNeedleColor,
     label: label,
+    customShape: base.customShape,
   };
 }

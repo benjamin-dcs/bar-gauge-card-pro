@@ -62,9 +62,8 @@ export function getMinMaxIndicatorSetpointBase(
 
   if (value === undefined || value === null) return;
 
-  const shapeElement = element === "setpoint" ? "setpoint_needle" : element;
   const customShape = card.getValidatedSvgPath(
-    `shapes.[${bar}]_${shapeElement}`
+    `entities[${bar}].shapes.${element}`
   );
 
   return { value, customColor, customShape };

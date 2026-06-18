@@ -20,5 +20,6 @@ export function getMinMaxIndicator(
     value: base.value,
     color: base.customColor ?? DEFAULTS.ui.minMaxIndicators.fill,
     opacity: opacity,
+    customShape: base.customShape,
   };
 }

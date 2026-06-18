@@ -238,8 +238,15 @@ export function computeData(card: ComputeDataContext) {
               offsetPercentage: offsetSecondary,
               color: colorSecondary,
               valueText: valueAndValueTextSecondary!.valueText,
+              customShape: card.getValidatedSvgPath(
+                `entities[${index}].shapes.valueSecondary`
+              ),
             }
           : undefined;
+
+      const customShapeValue = card.getValidatedSvgPath(
+        `entities[${index}].shapes.value`
+      );
 
       return {
         icon: iconData,
@@ -254,6 +261,7 @@ export function computeData(card: ComputeDataContext) {
         maxIndicator: maxIndicatorData,
         setpoint: setpointData,
         secondary: dataSecondary,
+        customShapeValue: customShapeValue,
       };
     }
   );

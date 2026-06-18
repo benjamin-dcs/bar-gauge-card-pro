@@ -87,18 +87,21 @@ export class HorizontalGaugeRow extends LitElement {
             })}
           ></div>`
         : nothing}
-      ${data.minIndicator
-        ? this.renderMinIndicator(data.minIndicator)
-        : nothing}
-      ${data.maxIndicator
-        ? this.renderMaxIndicator(data.maxIndicator)
-        : nothing}
       ${conf.isSeverity
         ? this.renderSeverityBar(
             borderRadiusFactor,
             conf.severityColorMode!,
             data.secondary
           )
+        : nothing }
+      ${data.minIndicator
+        ? this.renderMinIndicator(data.minIndicator, data.secondary !== undefined)
+        : nothing}
+      ${data.maxIndicator
+        ? this.renderMaxIndicator(data.maxIndicator, data.secondary !== undefined)
+        : nothing}
+      ${conf.isSeverity
+        ? nothing
         : this.renderValueIndicator(data.secondary)}
       ${data.setpoint ? this.renderSetpointIndicator(data.setpoint) : nothing}
     </div>`;
@@ -259,9 +262,10 @@ export class HorizontalGaugeRow extends LitElement {
         })}
       >
         <path
-          d="${secondary
+          d="${this.data.customShapeValue ??
+          (secondary
             ? DEFAULTS.svg.value.secondary
-            : DEFAULTS.svg.value.single}"
+            : DEFAULTS.svg.value.single)}"
           style=${styleMap({
             fill: "#d6d6d6",
             stroke: "#4e4e4e",
@@ -282,7 +286,7 @@ export class HorizontalGaugeRow extends LitElement {
             })}
           >
             <path
-              d="${DEFAULTS.svg.value.secondary}"
+              d="${secondary.customShape ?? DEFAULTS.svg.value.secondary}"
               style="
                 fill: #d6d6d6;
               "
@@ -292,21 +296,65 @@ export class HorizontalGaugeRow extends LitElement {
     </div>`;
   }
 
-  private renderMinIndicator(data: MinMaxIndicatorData) {
+  private renderMinIndicator(data: MinMaxIndicatorData, secondary: boolean = false) {
+    if (data.customShape) {
+      return html` <div class="value-indicator">
+        <svg
+          viewBox="-1 -1 2 2"
+          xmlns="http://www.w3.org/2000/svg"
+          class="value-indicator-svg"
+          style=${styleMap({
+            left: `${data.percentage ?? 0}%`,
+          })}
+        >
+          <path
+            d="${data.customShape}"
+            style=${styleMap({
+              fill: data.color,
+              opacity: data.opacity,
+            })}
+          ></path>
+        </svg>
+      </div>`;
+    }
+
     return html`<div
       class="min-indicator"
       style=${styleMap({
+        height: secondary ? "45%" : "100%",
         width: `${data.percentage ?? 0}%`,
         background: data.color,
-        opacity: this.data.minIndicator!.opacity,
+        opacity: data.opacity,
       })}
     ></div>`;
   }
 
-  private renderMaxIndicator(data: MinMaxIndicatorData) {
+  private renderMaxIndicator(data: MinMaxIndicatorData, secondary: boolean = false) {
+    if (data.customShape) {
+      return html` <div class="value-indicator">
+        <svg
+          viewBox="-1 -1 2 2"
+          xmlns="http://www.w3.org/2000/svg"
+          class="value-indicator-svg"
+          style=${styleMap({
+            left: `${data.percentage ?? 0}%`,
+          })}
+        >
+          <path
+            d="${data.customShape}"
+            style=${styleMap({
+              fill: data.color,
+              opacity: data.opacity,
+            })}
+          ></path>
+        </svg>
+      </div>`;
+    }
+
     return html`<div
       class="max-indicator"
       style=${styleMap({
+        height: secondary ? "45%" : "100%",
         left: `${data.percentage ?? 0}%`,
         background: data.color,
         opacity: data.opacity,
@@ -325,7 +373,7 @@ export class HorizontalGaugeRow extends LitElement {
         })}
       >
         <path
-          d="${DEFAULTS.svg.setpoint}"
+          d="${data.customShape ?? DEFAULTS.svg.setpoint}"
           style=${styleMap({
             fill: data.color,
           })}

@@ -105,14 +105,12 @@ export const horizontalRowStyles = css`
     display: block;
     position: absolute;
     inset: 0;
-    height: 100%;
   }
 
   .max-indicator {
     display: block;
     position: absolute;
     inset: 0;
-    height: 100%;
   }
 
   .value-indicator {

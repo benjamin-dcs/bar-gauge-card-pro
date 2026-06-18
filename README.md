@@ -83,6 +83,7 @@ If you find **Bar Gauge Card Pro** useful, consider supporting its development:
 | `value_secondary`             | template                                                              | Optional                                                                 | Value for secondary graph. Can be an entity or a value                                                   | ✔️ (only available in code-editor/yaml)                                     |
 | `hide_text_bar`               | boolean                                                               | `false`                                                                  | Hide the text-bar                                                                                        |                                                                             |
 | `round`                       | string                                                                | `off`                                                                    | Rounds the ends of the bar. Valid values are `off`, `full`, `medium` and `small`                         |                                                                             |
+| `shapes`                      | [shapes object](#shapes-configuration-variables)                      |                                                                          | Configuration of the shapes several elements                                                             |                                                                             |
 
 ### Segments configuration variables
 
@@ -176,6 +177,21 @@ segments: |-
 | `color`     | [string or map<sup>5</sup>](#1-color-examples) | `var(--error-color)` | Color of the needle                                                          | ✔️                                                                          |
 | `label`     | boolean                                        | false                | Enables a label indicating the value (main gauge only)                       |                                                                             |
 | `precision` | number                                         | Optional             | Amount of decimals to round the label to                                     |                                                                             |
+
+### Shapes Configuration variables
+
+> [!NOTE]
+>
+> The value needs to be a valid svg path. You can use an online tool like [svg-path-editor](https://yqnn.github.io/svg-path-editor/) to design your own custom needles!
+
+| Name             | Type   | Default                                                          | Description                                    | [Templatable](https://www.home-assistant.io/docs/configuration/templating/) |
+| :--------------- | :----- | :--------------------------------------------------------------- | :--------------------------------------------- | :-------------------------------------------------------------------------- |
+| `value`          | string | `M 0 -0.75 A 0.75 0.75 0 0 1 0 0.75 A 0.75 0.75 0 1 1 0 -0.75 z` | Shape of the main value **without** secondary  | ✔️                                                                          |
+|                  | string | `M -0.4 -1 L 0.4 -1 L 0 -0.1 L -0.4 -1 z`                        | Shape of the main value **with** secondary     | ✔️                                                                          |
+| `valueSecondary` | string | `M -0.4 -1 L 0.4 -1 L 0 -0.1 L -0.4 -1 z`                        | Shape of the secondary value                   | ✔️                                                                          |
+| `min_indicator`  | string | -                                                                | Shape of the main min-indicator                | ✔️                                                                          |
+| `max_indicator`  | string | -                                                                | Shape of the main max-indicator                | ✔️                                                                          |
+| `setpoint`       | string | `M 0 -0.4 A 0.4 0.4 0 0 1 0 0.4 A 0.4 0.4 0 1 1 0 -0.4 z`        | Shape of the setpoint needle of the main gauge | ✔️                                                                          |
 
 ## Installation
 
