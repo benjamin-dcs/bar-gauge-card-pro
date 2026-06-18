@@ -64,6 +64,8 @@ export type EntityRenderData = {
   icon?: IconData;
 
   secondary?: SecondaryValueData;
+
+  customShapeValue?: string;
 };
 
 // Pos is considered the standard in the code. From is only used to transform to pos
@@ -95,12 +97,14 @@ export type MinMaxIndicatorData = {
   percentage: number;
   color: string;
   opacity: number;
+  customShape?: string;
 };
 
 export type SetpointData = {
   percentage: number;
   color: string;
   label: string | undefined;
+  customShape?: string;
 };
 
 export type SecondaryValueData = {
@@ -108,6 +112,7 @@ export type SecondaryValueData = {
   offsetPercentage: number | undefined;
   color: string | undefined;
   valueText: string;
+  customShape?: string;
 };
 
 // Used to validate config `segments`

@@ -35,6 +35,14 @@ export interface IconConfig {
   icon_color?: string;
 }
 
+interface ShapesConfig {
+  value?: string;
+  valueSecondary?: string;
+  min_indicator?: string;
+  max_indicator?: string;
+  setpoint?: string;
+}
+
 export type BarGaugeEntity = {
   entity?: string;
   attribute?: string;
@@ -69,6 +77,8 @@ export type BarGaugeEntity = {
   unit_before_value?: boolean;
 
   title?: string;
+
+  shapes?: ShapesConfig;
 };
 
 export type BarGaugeCardProCardConfig = LovelaceCardConfig & {
