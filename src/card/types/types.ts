@@ -113,6 +113,9 @@ export type SecondaryValueData = {
   color: string | undefined;
   valueText: string;
   customShape?: string;
+  minIndicator?: MinMaxIndicatorData;
+  maxIndicator?: MinMaxIndicatorData;
+  setpoint?: SetpointData;
 };
 
 // Used to validate config `segments`
