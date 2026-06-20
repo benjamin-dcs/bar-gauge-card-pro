@@ -56,12 +56,20 @@ export const DEFAULTS = {
         z
       `,
     },
-    setpoint: `
-      M 0 -0.4 
-      A 0.4 0.4 0 0 1 0 0.4
-      A 0.4 0.4 0 1 1 0 -0.4
-      z
-    `,
+    setpoint: {
+      single: `
+        M 0 -0.4 
+        A 0.4 0.4 0 0 1 0 0.4
+        A 0.4 0.4 0 1 1 0 -0.4
+        z
+      `,
+      secondary: `
+        M 0 -0.8
+        A 0.3 0.3 90 0 1 0 -0.2 
+        A 0.3 0.3 90 1 1 0 -0.8 
+        z
+      `,
+    },
   },
 } as const;
 

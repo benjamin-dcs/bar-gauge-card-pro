@@ -89,7 +89,7 @@ export function getSecondaryValueAndValueText(
   primaryUnit: string | undefined,
   unit_before_value = false
 ): { value: number; valueText: string } | undefined {
-  const value = getValue<string>(`entities[${bar}].secondary_value`);
+  const value = getValue<string>(`entities[${bar}].secondary.value`);
   if (!value) return undefined;
 
   if (NumberUtils.isNumeric(value)) {

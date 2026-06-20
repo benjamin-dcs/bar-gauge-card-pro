@@ -55,6 +55,13 @@ export function computeData(card: ComputeDataContext) {
         card.getValueBound,
         index
       );
+
+      let percentage = getValueInPercentage(
+        normalize(valueAndValueText.value ?? min, min, max),
+        min,
+        max
+      );
+
       const valueAndValueTextSecondary = getSecondaryValueAndValueText(
         card.hass,
         card.getValueBound,
@@ -63,11 +70,6 @@ export function computeData(card: ComputeDataContext) {
         config.unit_before_value
       );
 
-      let percentage = getValueInPercentage(
-        normalize(valueAndValueText.value ?? min, min, max),
-        min,
-        max
-      );
       let percentageSecondary = valueAndValueTextSecondary
         ? getValueInPercentage(
             normalize(valueAndValueTextSecondary.value ?? min, min, max),
@@ -187,7 +189,12 @@ export function computeData(card: ComputeDataContext) {
       }
 
       let minIndicatorData: MinMaxIndicatorData | undefined = undefined;
-      const _minIndicator = getMinMaxIndicator(card, index, "min_indicator");
+      const _minIndicator = getMinMaxIndicator(
+        card,
+        index,
+        "primary",
+        "min_indicator"
+      );
       if (_minIndicator) {
         const minIndicatorValue = _minIndicator.value;
         const minIndicatorPercentage = getValueInPercentage(
@@ -202,7 +209,12 @@ export function computeData(card: ComputeDataContext) {
       }
 
       let maxIndicatorData: MinMaxIndicatorData | undefined = undefined;
-      const _maxIndicator = getMinMaxIndicator(card, index, "max_indicator");
+      const _maxIndicator = getMinMaxIndicator(
+        card,
+        index,
+        "primary",
+        "max_indicator"
+      );
       if (_maxIndicator) {
         const maxIndicatorValue = _maxIndicator.value;
         const maxIndicatorPercentage = getValueInPercentage(
@@ -217,7 +229,7 @@ export function computeData(card: ComputeDataContext) {
       }
 
       let setpointData: SetpointData | undefined = undefined;
-      const _setpoint = getSetpoint(card, index);
+      const _setpoint = getSetpoint(card, index, "primary");
       if (_setpoint) {
         const setpointValue = _setpoint.value;
         const setpointPercentage = getValueInPercentage(
@@ -231,6 +243,63 @@ export function computeData(card: ComputeDataContext) {
         };
       }
 
+      let minIndicatorSecondaryData: MinMaxIndicatorData | undefined =
+        undefined;
+      const _minIndicatorSecondary = getMinMaxIndicator(
+        card,
+        index,
+        "secondary",
+        "min_indicator"
+      );
+      if (_minIndicatorSecondary) {
+        const minIndicatorValue = _minIndicatorSecondary.value;
+        const minIndicatorPercentage = getValueInPercentage(
+          normalize(minIndicatorValue ?? min, min, max),
+          min,
+          max
+        );
+        minIndicatorSecondaryData = {
+          percentage: minIndicatorPercentage,
+          ..._minIndicatorSecondary,
+        };
+      }
+
+      let maxIndicatorSecondaryData: MinMaxIndicatorData | undefined =
+        undefined;
+      const _maxIndicatorSecondary = getMinMaxIndicator(
+        card,
+        index,
+        "secondary",
+        "max_indicator"
+      );
+      if (_maxIndicatorSecondary) {
+        const maxIndicatorValue = _maxIndicatorSecondary.value;
+        const maxIndicatorPercentage = getValueInPercentage(
+          normalize(maxIndicatorValue ?? max, min, max),
+          min,
+          max
+        );
+        maxIndicatorSecondaryData = {
+          percentage: maxIndicatorPercentage,
+          ..._maxIndicatorSecondary,
+        };
+      }
+
+      let setpointSecondaryData: SetpointData | undefined = undefined;
+      const _setpointSecondary = getSetpoint(card, index, "secondary");
+      if (_setpointSecondary) {
+        const setpointValue = _setpointSecondary.value;
+        const setpointPercentage = getValueInPercentage(
+          normalize(setpointValue ?? min, min, max),
+          min,
+          max
+        );
+        setpointSecondaryData = {
+          percentage: setpointPercentage,
+          ..._setpointSecondary,
+        };
+      }
+
       const dataSecondary: SecondaryValueData | undefined =
         percentageSecondary != null
           ? {
@@ -241,6 +310,9 @@ export function computeData(card: ComputeDataContext) {
               customShape: card.getValidatedSvgPath(
                 `entities[${index}].shapes.valueSecondary`
               ),
+              minIndicator: minIndicatorSecondaryData,
+              maxIndicator: maxIndicatorSecondaryData,
+              setpoint: setpointSecondaryData,
             }
           : undefined;
 

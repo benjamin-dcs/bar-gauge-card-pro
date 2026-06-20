@@ -4,8 +4,12 @@ import { getValueFromPath } from "../../utils/object/get-value";
 import { ComputeDataContext } from "../types/contexts";
 import { getMinMaxIndicatorSetpointBase } from "./min-max-indicator-setpoint-base";
 
-export function getSetpoint(card: ComputeDataContext, bar: number) {
-  const base = getMinMaxIndicatorSetpointBase(card, bar, "setpoint");
+export function getSetpoint(
+  card: ComputeDataContext,
+  bar: number,
+  gauge: "primary" | "secondary"
+) {
+  const base = getMinMaxIndicatorSetpointBase(card, bar, gauge, "setpoint");
   if (!base) return;
 
   let label: string | undefined = undefined;
@@ -13,9 +17,10 @@ export function getSetpoint(card: ComputeDataContext, bar: number) {
   const hasLabel = card._config?.entities?.[bar].setpoint?.label ?? false;
   if (hasLabel) {
     let value = base.value;
+    const gaugePath = gauge === "primary" ? "" : "secondary.";
     const precision = getValueFromPath(
       card._config,
-      `entities[${bar}].setpoint.precision`
+      `entities[${bar}]${gaugePath}.setpoint.precision`
     ) as number | undefined;
     if (precision !== undefined) {
       const factor = 10 ** precision;
