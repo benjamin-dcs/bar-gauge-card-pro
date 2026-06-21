@@ -38,9 +38,7 @@ export function computeData(card: ComputeDataContext) {
     (_entity: BarGaugeEntity, row: number) => {
       const config = card.computedConfig[row];
 
-      const title = !config.hideTextBar
-        ? getEntityTitle(card, row)
-        : undefined;
+      const title = !config.hideTextBar ? getEntityTitle(card, row) : undefined;
 
       const min = NumberUtils.toNumberOrDefault(
         card.getValue(`entities[${row}].min`),

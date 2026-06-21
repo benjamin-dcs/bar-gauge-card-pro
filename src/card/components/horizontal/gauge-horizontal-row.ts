@@ -367,10 +367,7 @@ export class HorizontalGaugeRow extends LitElement {
     ></div>`;
   }
 
-  private renderSetpoint(
-    data: SetpointData,
-    isSecondary: boolean = false
-  ) {
+  private renderSetpoint(data: SetpointData, isSecondary: boolean = false) {
     const shape = normalizeSvgPath(
       data.customShape ??
         (isSecondary

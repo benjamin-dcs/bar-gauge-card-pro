@@ -6,7 +6,6 @@
 
 - Add Vertical mode
 - Add Visual Editor
-- Add custom shapes
 - Add custom styling variables
 
 ## Description
