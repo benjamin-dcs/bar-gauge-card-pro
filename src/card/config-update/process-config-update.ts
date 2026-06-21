@@ -15,7 +15,7 @@ export function processConfigUpdate(
     card.orientation == "horizontal" ? (config.compact ?? false) : undefined;
 
   if (config.entities) {
-    config.entities.forEach((entityConfig, index: number) => {
+    config.entities.forEach((entityConfig, row: number) => {
       let gradient: boolean | undefined = undefined;
       let gradientBackground: boolean | undefined = undefined;
       let gradientBackgroundOpacity: number | undefined = undefined;
@@ -51,7 +51,7 @@ export function processConfigUpdate(
       const hideTextBar =
         (card.hideAllTextBars || entityConfig.hide_text_bar) ?? false;
 
-      card.computedConfig[index] = {
+      card.computedConfig[row] = {
         gradient: gradient,
         gradientBackground: gradientBackground,
         gradientBackgroundOpacity: gradientBackgroundOpacity,

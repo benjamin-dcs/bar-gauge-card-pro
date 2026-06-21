@@ -48,7 +48,7 @@ export const DEFAULTS = {
         A 0.75 0.75 0 1 1 0 -0.75
         z
       `,
-      secondary: `
+      dual: `
         M -0.4 -1
         L 0.4 -1
         L 0 -0.1
@@ -63,7 +63,7 @@ export const DEFAULTS = {
         A 0.4 0.4 0 1 1 0 -0.4
         z
       `,
-      secondary: `
+      dual: `
         M 0 -0.8
         A 0.3 0.3 90 0 1 0 -0.2 
         A 0.3 0.3 90 1 1 0 -0.8 

@@ -22,7 +22,7 @@ import {
 export function getLinearGradientString(
   log: Logger,
   getTemplateKeyValue: GetValueFn,
-  bar: number,
+  row: number,
   min: number,
   max: number,
   resolution: GradientResolution,
@@ -34,7 +34,7 @@ export function getLinearGradientString(
       ? getLinearGradientSegments(
           log,
           getTemplateKeyValue,
-          bar,
+          row,
           min,
           max,
           fromMidpoints
@@ -42,7 +42,7 @@ export function getLinearGradientString(
       : getInterpolatedLinearGradientSegments(
           log,
           getTemplateKeyValue,
-          bar,
+          row,
           min,
           max,
           resolution,
@@ -85,7 +85,7 @@ export function computeSeverity(
   log: Logger,
   getTemplateKeyValue: GetValueFn,
   severity_color_mode: SeverityColorMode,
-  bar: number,
+  row: number,
   min: number,
   max: number,
   value: number,
@@ -98,7 +98,7 @@ export function computeSeverity(
     const gradienSegments = getLinearGradientSegments(
       log,
       getTemplateKeyValue,
-      bar,
+      row,
       min,
       max,
       true
@@ -110,7 +110,7 @@ export function computeSeverity(
       value: Math.min(value, max), // beyond max, the gauge shows max. Also needed for getInterpolatedColor
     });
   } else {
-    return getSegmentColor(log, getTemplateKeyValue, bar, min, max, value);
+    return getSegmentColor(log, getTemplateKeyValue, row, min, max, value);
   }
 }
 
@@ -120,12 +120,12 @@ export function computeSeverity(
 function getSegmentColor(
   log: Logger,
   getTemplateKeyValue: GetValueFn,
-  bar: number,
+  row: number,
   min: number,
   max: number,
   value: number
 ): string {
-  const segments = getSegments(log, getTemplateKeyValue, bar, min, max);
+  const segments = getSegments(log, getTemplateKeyValue, row, min, max);
   for (let i = 0; i < segments.length; i++) {
     const segment = segments[i];
     if (
@@ -142,11 +142,11 @@ function getSegmentColor(
 export function getFlatLinearGradientString(
   log: Logger,
   getTemplateKeyValue: GetValueFn,
-  bar: number,
+  row: number,
   min: number,
   max: number
 ): string {
-  const segments = getSegments(log, getTemplateKeyValue, bar, min, max);
+  const segments = getSegments(log, getTemplateKeyValue, row, min, max);
   const numSegments = segments.length;
 
   if (numSegments < 2) {

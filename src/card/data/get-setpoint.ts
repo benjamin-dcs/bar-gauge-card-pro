@@ -6,21 +6,21 @@ import { getMinMaxIndicatorSetpointBase } from "./min-max-indicator-setpoint-bas
 
 export function getSetpoint(
   card: ComputeDataContext,
-  bar: number,
-  gauge: "primary" | "secondary"
+  row: number,
+  bar: "primary" | "secondary"
 ) {
-  const base = getMinMaxIndicatorSetpointBase(card, bar, gauge, "setpoint");
+  const base = getMinMaxIndicatorSetpointBase(card, row, bar, "setpoint");
   if (!base) return;
 
   let label: string | undefined = undefined;
 
-  const hasLabel = card._config?.entities?.[bar].setpoint?.label ?? false;
+  const hasLabel = card._config?.entities?.[row].setpoint?.label ?? false;
   if (hasLabel) {
     let value = base.value;
-    const gaugePath = gauge === "primary" ? "" : "secondary.";
+    const gaugePath = bar === "primary" ? "" : "secondary.";
     const precision = getValueFromPath(
       card._config,
-      `entities[${bar}]${gaugePath}.setpoint.precision`
+      `entities[${row}]${gaugePath}.setpoint.precision`
     ) as number | undefined;
     if (precision !== undefined) {
       const factor = 10 ** precision;

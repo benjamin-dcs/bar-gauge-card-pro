@@ -15,14 +15,14 @@ export function getValueAndValueText(
   hass: HomeAssistant,
   config: BarGaugeCardProCardConfig,
   getValue: GetValueFn,
-  bar: number
+  row: number
 ): ValueAndValueText {
-  const cfg = config.entities![bar];
+  const cfg = config.entities![row];
   const entity = cfg.entity;
   const attribute = cfg.attribute;
 
-  const templateValue = getValue(`entities[${bar}].value`);
-  const templateValueText = getValue(`entities[${bar}].valueText`);
+  const templateValue = getValue(`entities[${row}].value`);
+  const templateValueText = getValue(`entities[${row}].valueText`);
 
   let valueText: string | undefined;
   let stateObj;
@@ -69,7 +69,7 @@ export function getValueAndValueText(
     valueText = "";
   }
 
-  let unit = getValue<string>(`entities[${bar}].unit_of_measurement`);
+  let unit = getValue<string>(`entities[${row}].unit_of_measurement`);
   unit =
     unit === ""
       ? ""
@@ -85,11 +85,11 @@ export function getValueAndValueText(
 export function getSecondaryValueAndValueText(
   hass: HomeAssistant,
   getValue: GetValueFn,
-  bar: number,
+  row: number,
   primaryUnit: string | undefined,
   unit_before_value = false
 ): { value: number; valueText: string } | undefined {
-  const value = getValue<string>(`entities[${bar}].secondary.value`);
+  const value = getValue<string>(`entities[${row}].secondary.value`);
   if (!value) return undefined;
 
   if (NumberUtils.isNumeric(value)) {

@@ -20,11 +20,13 @@ import { DEFAULTS } from "../../constants/defaults";
 import type { BarGaugeEntity } from "../config";
 import type { ComputeDataContext } from "../types/contexts";
 import type {
+  EntityMode,
   EntityRenderData,
   IconData,
   MinMaxIndicatorData,
   SecondaryValueData,
   SetpointData,
+  SeverityColorMode,
   SeverityData,
 } from "../types/types";
 import { getMinMaxIndicator } from "./get-min-max-indicator";
@@ -33,19 +35,19 @@ export function computeData(card: ComputeDataContext) {
   if (!card._config.entities) return;
 
   const candidates: EntityRenderData[] = card._config.entities.map(
-    (_entity: BarGaugeEntity, index: number) => {
-      const config = card.computedConfig[index];
+    (_entity: BarGaugeEntity, row: number) => {
+      const config = card.computedConfig[row];
 
       const title = !config.hideTextBar
-        ? getEntityTitle(card, index)
+        ? getEntityTitle(card, row)
         : undefined;
 
       const min = NumberUtils.toNumberOrDefault(
-        card.getValue(`entities[${index}].min`),
+        card.getValue(`entities[${row}].min`),
         DEFAULTS.values.min
       );
       const max = NumberUtils.toNumberOrDefault(
-        card.getValue(`entities[${index}].max`),
+        card.getValue(`entities[${row}].max`),
         DEFAULTS.values.max
       );
 
@@ -53,7 +55,7 @@ export function computeData(card: ComputeDataContext) {
         card.hass,
         card._config,
         card.getValueBound,
-        index
+        row
       );
 
       let percentage = getValueInPercentage(
@@ -62,28 +64,9 @@ export function computeData(card: ComputeDataContext) {
         max
       );
 
-      const valueAndValueTextSecondary = getSecondaryValueAndValueText(
-        card.hass,
-        card.getValueBound,
-        index,
-        valueAndValueText.unit_of_measurement,
-        config.unit_before_value
-      );
-
-      let percentageSecondary = valueAndValueTextSecondary
-        ? getValueInPercentage(
-            normalize(valueAndValueTextSecondary.value ?? min, min, max),
-            min,
-            max
-          )
-        : undefined;
-
       let offset = 0;
       let linearGradient: string | undefined = undefined;
       let severity: SeverityData | undefined = undefined;
-
-      let colorSecondary: string | undefined = undefined;
-      let offsetSecondary: number | undefined = undefined;
 
       if (config.mode === "severity") {
         const color =
@@ -92,7 +75,7 @@ export function computeData(card: ComputeDataContext) {
                 card.log,
                 card.getValueBound,
                 config.severityColorMode!,
-                index,
+                row,
                 min,
                 max,
                 valueAndValueText.value ?? min,
@@ -101,32 +84,18 @@ export function computeData(card: ComputeDataContext) {
             : getLinearGradientString(
                 card.log,
                 card.getValueBound,
-                index,
+                row,
                 min,
                 max,
                 config.gradientResolution!,
                 undefined
               );
 
-        colorSecondary =
-          percentageSecondary != null
-            ? computeSeverity(
-                card.log,
-                card.getValueBound,
-                config.severityColorMode!,
-                index,
-                min,
-                max,
-                valueAndValueTextSecondary?.value ?? min,
-                true
-              )
-            : undefined;
-
         if (config.gradientBackground) {
           linearGradient = getLinearGradientString(
             card.log,
             card.getValueBound,
-            index,
+            row,
             min,
             max,
             config.gradientResolution!,
@@ -142,16 +111,6 @@ export function computeData(card: ComputeDataContext) {
             offset = 50;
             percentage = percentage - 50;
           }
-
-          if (percentageSecondary != null) {
-            if (percentageSecondary < 50) {
-              offsetSecondary = percentageSecondary;
-              percentageSecondary = 50 - percentageSecondary;
-            } else {
-              offsetSecondary = 50;
-              percentageSecondary = percentageSecondary - 50;
-            }
-          }
         }
 
         severity = { offsetPercentage: offset, color };
@@ -159,7 +118,7 @@ export function computeData(card: ComputeDataContext) {
         linearGradient = getLinearGradientString(
           card.log,
           card.getValueBound,
-          index,
+          row,
           min,
           max,
           config.gradientResolution!,
@@ -169,18 +128,18 @@ export function computeData(card: ComputeDataContext) {
         linearGradient = getFlatLinearGradientString(
           card.log,
           card.getValueBound,
-          index,
+          row,
           min,
           max
         );
       }
 
       let iconData: IconData | undefined = undefined;
-      const _icon = card.getValue<string>(`entities[${index}].icon.icon`);
+      const _icon = card.getValue<string>(`entities[${row}].icon.icon`);
       if (_icon) {
         // [TODO] replace with getValueFromPath
         const color =
-          card.getValue<string>(`entities[${index}].icon.icon_color`) ??
+          card.getValue<string>(`entities[${row}].icon.icon_color`) ??
           DEFAULTS.ui.iconColor;
         iconData = {
           icon: _icon,
@@ -191,7 +150,7 @@ export function computeData(card: ComputeDataContext) {
       let minIndicatorData: MinMaxIndicatorData | undefined = undefined;
       const _minIndicator = getMinMaxIndicator(
         card,
-        index,
+        row,
         "primary",
         "min_indicator"
       );
@@ -211,7 +170,7 @@ export function computeData(card: ComputeDataContext) {
       let maxIndicatorData: MinMaxIndicatorData | undefined = undefined;
       const _maxIndicator = getMinMaxIndicator(
         card,
-        index,
+        row,
         "primary",
         "max_indicator"
       );
@@ -229,7 +188,7 @@ export function computeData(card: ComputeDataContext) {
       }
 
       let setpointData: SetpointData | undefined = undefined;
-      const _setpoint = getSetpoint(card, index, "primary");
+      const _setpoint = getSetpoint(card, row, "primary");
       if (_setpoint) {
         const setpointValue = _setpoint.value;
         const setpointPercentage = getValueInPercentage(
@@ -243,81 +202,26 @@ export function computeData(card: ComputeDataContext) {
         };
       }
 
-      let minIndicatorSecondaryData: MinMaxIndicatorData | undefined =
-        undefined;
-      const _minIndicatorSecondary = getMinMaxIndicator(
-        card,
-        index,
-        "secondary",
-        "min_indicator"
-      );
-      if (_minIndicatorSecondary) {
-        const minIndicatorValue = _minIndicatorSecondary.value;
-        const minIndicatorPercentage = getValueInPercentage(
-          normalize(minIndicatorValue ?? min, min, max),
-          min,
-          max
-        );
-        minIndicatorSecondaryData = {
-          percentage: minIndicatorPercentage,
-          ..._minIndicatorSecondary,
-        };
-      }
-
-      let maxIndicatorSecondaryData: MinMaxIndicatorData | undefined =
-        undefined;
-      const _maxIndicatorSecondary = getMinMaxIndicator(
-        card,
-        index,
-        "secondary",
-        "max_indicator"
-      );
-      if (_maxIndicatorSecondary) {
-        const maxIndicatorValue = _maxIndicatorSecondary.value;
-        const maxIndicatorPercentage = getValueInPercentage(
-          normalize(maxIndicatorValue ?? max, min, max),
-          min,
-          max
-        );
-        maxIndicatorSecondaryData = {
-          percentage: maxIndicatorPercentage,
-          ..._maxIndicatorSecondary,
-        };
-      }
-
-      let setpointSecondaryData: SetpointData | undefined = undefined;
-      const _setpointSecondary = getSetpoint(card, index, "secondary");
-      if (_setpointSecondary) {
-        const setpointValue = _setpointSecondary.value;
-        const setpointPercentage = getValueInPercentage(
-          normalize(setpointValue ?? min, min, max),
-          min,
-          max
-        );
-        setpointSecondaryData = {
-          percentage: setpointPercentage,
-          ..._setpointSecondary,
-        };
-      }
-
-      const dataSecondary: SecondaryValueData | undefined =
-        percentageSecondary != null
-          ? {
-              percentage: percentageSecondary,
-              offsetPercentage: offsetSecondary,
-              color: colorSecondary,
-              valueText: valueAndValueTextSecondary!.valueText,
-              customShape: card.getValidatedSvgPath(
-                `entities[${index}].shapes.valueSecondary`
-              ),
-              minIndicator: minIndicatorSecondaryData,
-              maxIndicator: maxIndicatorSecondaryData,
-              setpoint: setpointSecondaryData,
-            }
-          : undefined;
-
       const customShapeValue = card.getValidatedSvgPath(
-        `entities[${index}].shapes.value`
+        `entities[${row}].shapes.value`
+      );
+
+      const dataSecondary = computeSecondaryData(
+        card,
+        row,
+        config.mode,
+        config.mode === "severity"
+          ? {
+              isCentered: config.severityCentered!,
+              colorMode: config.severityColorMode!,
+            }
+          : undefined,
+        {
+          unit_of_measurement: valueAndValueText.unit_of_measurement ?? "",
+          unit_before_value: config.unit_before_value,
+          min: min,
+          max: max,
+        }
       );
 
       return {
@@ -332,8 +236,8 @@ export function computeData(card: ComputeDataContext) {
         minIndicator: minIndicatorData,
         maxIndicator: maxIndicatorData,
         setpoint: setpointData,
-        secondary: dataSecondary,
         customShapeValue: customShapeValue,
+        secondary: dataSecondary,
       };
     }
   );
@@ -349,13 +253,149 @@ export function computeData(card: ComputeDataContext) {
 
 function getEntityTitle(
   card: ComputeDataContext,
-  bar: number
+  row: number
 ): string | undefined {
-  const configValue = card.getValue<string>(`entities[${bar}].title`);
+  const configValue = card.getValue<string>(`entities[${row}].title`);
   if (configValue === "" || configValue !== undefined) return configValue;
 
   let stateObj;
-  const entity = card._config?.entities?.[bar].entity;
+  const entity = card._config?.entities?.[row].entity;
   if (entity !== undefined) stateObj = card.hass?.states[entity];
   return stateObj?.attributes.friendly_name;
+}
+
+function computeSecondaryData(
+  card: ComputeDataContext,
+  row: number,
+  mode: EntityMode,
+  severityData:
+    | {
+        isCentered: boolean;
+        colorMode: SeverityColorMode;
+      }
+    | undefined,
+  primaryValueData: {
+    unit_of_measurement: string;
+    unit_before_value: boolean;
+    min: number;
+    max: number;
+  }
+): SecondaryValueData | undefined {
+  const valueAndValueText = getSecondaryValueAndValueText(
+    card.hass,
+    card.getValueBound,
+    row,
+    primaryValueData.unit_of_measurement,
+    primaryValueData.unit_before_value
+  );
+
+  if (!valueAndValueText) return undefined;
+
+  const min = primaryValueData.min;
+  const max = primaryValueData.max;
+
+  let percentage = getValueInPercentage(
+    normalize(valueAndValueText.value ?? min, min, max),
+    min,
+    max
+  );
+
+  let color: string | undefined = undefined;
+  let offset: number | undefined = undefined;
+
+  if (mode === "severity") {
+    color =
+      percentage != null
+        ? computeSeverity(
+            card.log,
+            card.getValueBound,
+            severityData!.colorMode,
+            row,
+            min,
+            max,
+            valueAndValueText?.value ?? min,
+            true
+          )
+        : undefined;
+
+    if (severityData!.isCentered) {
+      if (percentage != null) {
+        if (percentage < 50) {
+          offset = percentage;
+          percentage = 50 - percentage;
+        } else {
+          offset = 50;
+          percentage = percentage - 50;
+        }
+      }
+    }
+  }
+
+  let minIndicatorData: MinMaxIndicatorData | undefined = undefined;
+  const _minIndicator = getMinMaxIndicator(
+    card,
+    row,
+    "secondary",
+    "min_indicator"
+  );
+  if (_minIndicator) {
+    const minIndicatorValue = _minIndicator.value;
+    const minIndicatorPercentage = getValueInPercentage(
+      normalize(minIndicatorValue ?? min, min, max),
+      min,
+      max
+    );
+    minIndicatorData = {
+      percentage: minIndicatorPercentage,
+      ..._minIndicator,
+    };
+  }
+
+  let maxIndicatorData: MinMaxIndicatorData | undefined = undefined;
+  const _maxIndicator = getMinMaxIndicator(
+    card,
+    row,
+    "secondary",
+    "max_indicator"
+  );
+  if (_maxIndicator) {
+    const maxIndicatorValue = _maxIndicator.value;
+    const maxIndicatorPercentage = getValueInPercentage(
+      normalize(maxIndicatorValue ?? max, min, max),
+      min,
+      max
+    );
+    maxIndicatorData = {
+      percentage: maxIndicatorPercentage,
+      ..._maxIndicator,
+    };
+  }
+
+  let setpointData: SetpointData | undefined = undefined;
+  const _setpoint = getSetpoint(card, row, "secondary");
+  if (_setpoint) {
+    const setpointValue = _setpoint.value;
+    const setpointPercentage = getValueInPercentage(
+      normalize(setpointValue ?? min, min, max),
+      min,
+      max
+    );
+    setpointData = {
+      percentage: setpointPercentage,
+      ..._setpoint,
+    };
+  }
+
+  return {
+    percentage: percentage,
+    offsetPercentage: offset,
+    color: color,
+    valueText: valueAndValueText.valueText,
+    customShape: card.getValidatedSvgPath(
+      `entities[${row}].shapes.valueSecondary`
+    ),
+    minIndicator: minIndicatorData,
+    maxIndicator: maxIndicatorData,
+    setpoint: setpointData,
+  };
 }

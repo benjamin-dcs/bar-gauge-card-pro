@@ -4,8 +4,8 @@ import { ComputeDataContext } from "../types/contexts";
 
 export function getMinMaxIndicatorSetpointBase(
   card: ComputeDataContext,
-  bar: number,
-  gauge: "primary" | "secondary",
+  row: number,
+  bar: "primary" | "secondary",
   element: "min_indicator" | "max_indicator" | "setpoint"
 ):
   | undefined
@@ -14,24 +14,24 @@ export function getMinMaxIndicatorSetpointBase(
       customColor: string | undefined;
       customShape: string | undefined;
     } {
-  const gaugePath = gauge === "primary" ? "" : "secondary.";
+  const gaugePath = bar === "primary" ? "" : "secondary.";
   const type = getValueFromPath(
     card._config,
-    `entities[${bar}].${gaugePath}${element}.type`
+    `entities[${row}].${gaugePath}${element}.type`
   );
   if (type === undefined) return undefined;
 
-  const customColorKey = `entities.[${bar}].${gaugePath}${element}.color`;
+  const customColorKey = `entities.[${row}].${gaugePath}${element}.color`;
   const customColor = card.getLightDarkModeColor(customColorKey);
 
   let value: number | undefined;
   if (type === "attribute") {
-    const entity = card._config?.entities?.[bar].entity;
+    const entity = card._config?.entities?.[row].entity;
     if (!entity) return undefined;
 
     const configValue = getValueFromPath(
       card._config,
-      `entities[${bar}].${gaugePath}${element}.value`
+      `entities[${row}].${gaugePath}${element}.value`
     );
     if (typeof configValue !== "string") return undefined;
 
@@ -42,7 +42,7 @@ export function getMinMaxIndicatorSetpointBase(
   } else if (type === "entity") {
     const configValue = getValueFromPath(
       card._config,
-      `entities[${bar}].${element}.value`
+      `entities[${row}].${element}.value`
     );
     if (typeof configValue !== "string") return undefined;
 
@@ -53,20 +53,20 @@ export function getMinMaxIndicatorSetpointBase(
   } else if (type === "number") {
     const configValue = getValueFromPath(
       card._config,
-      `entities[${bar}].${gaugePath}${element}.value`
+      `entities[${row}].${gaugePath}${element}.value`
     );
     value = NumberUtils.tryToNumber(configValue);
   } else if (type === "template") {
     value = NumberUtils.tryToNumber(
-      card.getValue(`entities[${bar}].${gaugePath}${element}.value`)
+      card.getValue(`entities[${row}].${gaugePath}${element}.value`)
     );
   }
 
   if (value === undefined || value === null) return;
 
-  const gaugeShapePath = gauge === "primary" ? "" : "secondary_";
+  const gaugeShapePath = bar === "primary" ? "" : "secondary_";
   const customShape = card.getValidatedSvgPath(
-    `entities[${bar}].shapes.${gaugeShapePath}${element}`
+    `entities[${row}].shapes.${gaugeShapePath}${element}`
   );
 
   return { value, customColor, customShape };

@@ -5,18 +5,18 @@ import { getMinMaxIndicatorSetpointBase } from "./min-max-indicator-setpoint-bas
 
 export function getMinMaxIndicator(
   card: ComputeDataContext,
-  bar: number,
+  row: number,
   gauge: "primary" | "secondary",
   element: "min_indicator" | "max_indicator"
 ) {
-  const base = getMinMaxIndicatorSetpointBase(card, bar, gauge, element);
+  const base = getMinMaxIndicatorSetpointBase(card, row, gauge, element);
   if (!base) return;
 
   const gaugePath = gauge === "primary" ? "" : "secondary.";
   const opacity =
     (getValueFromPath(
       card._config,
-      `entities[${bar}].${gaugePath}${element}.opacity`
+      `entities[${row}].${gaugePath}${element}.opacity`
     ) as number | undefined) ?? DEFAULTS.ui.minMaxIndicators.opacity;
 
   return {

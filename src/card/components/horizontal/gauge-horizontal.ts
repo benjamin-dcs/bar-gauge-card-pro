@@ -16,8 +16,8 @@ export class HorizontalGauge extends LitElement {
   protected override render(): TemplateResult | typeof nothing {
     if (!this.config || !this.data) return nothing;
 
-    return html` ${this.config.map((config, index) => {
-      const data = this.data[index];
+    return html` ${this.config.map((config, row) => {
+      const data = this.data[row];
       return html`<bar-gauge-horizontal-row
         .config=${config}
         .data=${data}

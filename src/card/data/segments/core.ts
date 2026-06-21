@@ -204,14 +204,14 @@ function _computeSegments(
 export function getSegments(
   log: Logger,
   getTemplateKeyValue: GetValueFn,
-  bar: number,
+  row: number,
   min: number,
   max: number,
   fromMidpoints = false
 ): BarSegment[] {
   const configSegments = getTemplateKeyValue<
     BarSegment[] | BarSegmentFrom[] | string
-  >(`entities.[${bar}].segments`);
+  >(`entities.[${row}].segments`);
   if (!configSegments || configSegments.length === 0) {
     return [{ pos: min, color: DEFAULTS.severity.defaultColor() }];
   }
@@ -240,7 +240,7 @@ export function getSegments(
 export function getLinearGradientSegments(
   log: Logger,
   getTemplateKeyValue: GetValueFn,
-  bar: number,
+  row: number,
   min: number,
   max: number,
   fromMidpoints = false
@@ -248,7 +248,7 @@ export function getLinearGradientSegments(
   const segments = getSegments(
     log,
     getTemplateKeyValue,
-    bar,
+    row,
     min,
     max,
     fromMidpoints
@@ -348,7 +348,7 @@ export function getLinearGradientSegments(
 export function getInterpolatedLinearGradientSegments(
   log: Logger,
   getTemplateKeyValue: GetValueFn,
-  bar: number,
+  row: number,
   min: number,
   max: number,
   resolution: number,
@@ -361,7 +361,7 @@ export function getInterpolatedLinearGradientSegments(
   const segments = getLinearGradientSegments(
     log,
     getTemplateKeyValue,
-    bar,
+    row,
     min,
     max,
     fromMidpoints
